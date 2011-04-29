@@ -1,0 +1,97 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta content="text/html; charset=UTF-8" http-equiv="content-type" />
+    <title>Home</title>
+    <style type="text/css">
+      .form {
+        border: thin blue solid;
+        padding: 10px;
+        margin: 10px;
+        float: left;
+        clear: both;
+      }
+
+      .customBinding #customBinding_firstName_field, .customBinding #customBinding_middleName_field {
+        float: left;
+        padding: 3px;
+      }
+
+      .customBinding fieldset {
+        clear: both;
+        margin: 5px;
+      }
+    </style>
+    <script id="jquery" src="/classpath/jquery.js" type="text/javascript"></script>
+  </head>
+  <body>
+    <div class="form">
+      <div class="lift:WizardAllLiftScreen">
+      </div>
+      <div id="wizardAllResults">
+      </div>
+    </div>
+    <div class="form">
+      <div class="lift:EmbeddedContentLiftScreen">
+        <i>This form takes its template from the contents of the snippet element.</i>
+        <div>
+          <div class="fields">
+            <table>
+              <tr class="fieldContainer">
+                <td>
+                  <label class="label"></label>
+                  <span class="help"></span>
+                  <div class="errors">
+                    <div class="error"></div>
+                  </div>
+                </td>
+                <td><span class="value"></span></td>
+              </tr>
+            </table>
+          </div>
+          <div>
+            <table>
+              <tr>
+                <td><button class="next"></button> </td>
+              </tr>
+            </table>
+          </div>
+        </div>
+      </div>
+      <div id="embeddedContentResults">
+      </div>
+    </div>
+    <div class="form customBinding">
+      <div class="lift:CustomBindingLiftScreen">
+        <i>This form uses a default template for first and middle name and an embedded template for last name.</i>
+        <div class="fields">
+          <fieldset>
+            <div id="customBinding_firstName_field"></div>
+            <div id="customBinding_middleName_field"></div>
+          </fieldset>
+          <fieldset>
+            <div id="customBinding_lastName_field">
+              <i>Something so creatively custom it couldn't possibly fit the mold...</i>
+              <div>
+                <label class="label"></label>
+              </div>
+              <div>
+                <span class="value"></span>
+              </div>
+              <div class="errors">
+                <div class="error">
+                </div>
+              </div>
+            </div>
+          </fieldset>
+        </div>
+        <div>
+          <button class="next"></button>
+        </div>
+      </div>
+      <div id="customBindingResults">
+      </div>
+    </div>
+  </body>
+</html>
+
