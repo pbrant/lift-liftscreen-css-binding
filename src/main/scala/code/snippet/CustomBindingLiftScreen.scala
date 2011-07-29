@@ -2,7 +2,6 @@ package code.snippet
 
 import net.liftweb.http.js.JsCmds
 import JsCmds._
-import xml.NodeSeq
 
 object CustomBindingLiftScreen extends DemoCssBoundLiftScreen {
   val firstName = field("First Name", "")
@@ -17,16 +16,7 @@ object CustomBindingLiftScreen extends DemoCssBoundLiftScreen {
   def formName = "customBinding"
 
   def finish() {
+    Finished.set(true)
     AjaxOnDone.set(SetHtml("customBindingResults", <b>All done!</b>))
   }
-
-  override def defaultFieldNodeSeq:NodeSeq =
-    <div>
-      <label class="label field"></label>
-      <span class="value fieldValue"></span>
-      <span class="help"></span>
-      <div class="errors">
-        <div class="error"></div>
-      </div>
-    </div>
 }

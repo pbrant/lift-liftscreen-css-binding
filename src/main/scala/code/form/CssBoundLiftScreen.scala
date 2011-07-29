@@ -1,5 +1,5 @@
 /*
- * Copyright 2011 Wisconsin Court System
+ * Copyright 2011 WorldWide Conferencing, LLC
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,8 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
-package gov.wicourts.jdash2.form
+package code.form
 
 import net.liftweb.http.js.JsCmds._
 import net.liftweb.http.js.JsCmd
@@ -25,6 +24,9 @@ trait CssBoundLiftScreen extends LocalLiftScreen with CssBoundScreen {
   protected val SavedDefaultXml = vendAVar(defaultXml)
 
   protected val Finished = vendATransientRequestVar(false)
+
+  protected val LocalActionName = vendATransientRequestVar("")
+  protected val NextId = vendATransientRequestVar("")
 
   override def localSetup() {
     SavedDefaultXml.get
@@ -37,11 +39,15 @@ trait CssBoundLiftScreen extends LocalLiftScreen with CssBoundScreen {
   protected def additionalAjaxErrorResponse: JsCmd = Noop
 
   override protected def doFinish(): JsCmd= {
-    val result = super.doFinish
-    if (Finished.is)
-      result
-    else
-      result & additionalAjaxErrorResponse
+    if (! LocalAction.is.isEmpty && localActions.isDefinedAt(LocalAction.is))
+      localActions(LocalAction.is)
+    else {
+      val result = super.doFinish
+      if (Finished.is)
+        result
+      else
+        result & additionalAjaxErrorResponse
+    }
   }
 
   protected def renderWithErrors(errors: List[FieldError]) {

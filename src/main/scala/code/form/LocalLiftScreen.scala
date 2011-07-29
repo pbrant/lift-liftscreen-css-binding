@@ -1,5 +1,5 @@
 /*
- * Copyright 2010-2011 WorldWide Conferencing, LLC
+ * Copyright 2011 WorldWide Conferencing, LLC
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package gov.wicourts.jdash2.form
+package code.form
 
 import xml._
 import reflect.Manifest
@@ -214,8 +214,7 @@ trait LocalLiftScreen extends AbstractScreen with StatefulSnippet with ScreenWiz
   protected def allTemplatePath: List[String] = LiftScreenRules.allTemplatePath.vend
 
   protected def allTemplate: NodeSeq = {
-    val ret = TemplateFinder.
-      findAnyTemplate(allTemplatePath) openOr allTemplateNodeSeq
+    val ret = Templates(allTemplatePath) openOr allTemplateNodeSeq
 
     ret
   }

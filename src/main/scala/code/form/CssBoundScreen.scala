@@ -1,6 +1,5 @@
 /*
- * Copyright 2010-2011 WorldWide Conferencing, LLC
- * Copyright 2011 Wisconsin Court System
+ * Copyright 2011 WorldWide Conferencing, LLC
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,10 +13,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package gov.wicourts.jdash2.form
+package code.form
 
 import net.liftweb.http._
+import js.jquery.JqJE.JqId
 import js.JsCmd
+import js.JsCmds._
+import js.jquery.JqJsCmds._
+import js.JE
 import net.liftweb.util._
 import Helpers._
 import net.liftweb.common.{Full, Box}
@@ -34,6 +37,18 @@ trait CssBoundScreen extends ScreenWizardRendered {
   def labelSuffix:NodeSeq = Text(":")
 
   protected lazy val cssClassBinding = new CssClassBinding
+
+  protected val LocalAction: AnyVar[String, _] = vendAVar[String]("")
+
+  protected val NextId: AnyVar[String, _]
+  protected val LocalActionName: AnyVar[String, _]
+
+  protected def localActions: PartialFunction[String, JsCmd] = new PartialFunction[String, JsCmd] {
+    def apply(s: String) = error("apply() should not be called")
+    def isDefinedAt(s: String) = false
+  }
+
+  protected def additionalFormBindings: Option[CssSel] = None
 
   protected def bindToId(field:Field, cssFieldName:String):Field = bindToId(field, cssFieldName, Default)
 
@@ -71,6 +86,14 @@ trait CssBoundScreen extends ScreenWizardRendered {
   case object Self extends CssBindingStyle
   case object Default extends CssBindingStyle
 
+  protected def bindLocalAction(selector: String, name: String): CssSel = {
+    (selector + " [onclick]") #> (
+      JE.JsFunc((JqId(JE.Str(LocalActionName.get)) ~> JE.JsVal("val")).toJsCmd, JE.Str(name)).cmd &
+      SHtml.makeAjaxCall(LiftRules.jsArtifacts.serialize(NextId.get)) &
+      Run("return false;")
+    ).toJsCmd
+  }
+
   override protected def renderAll(currentScreenNumber: Box[NodeSeq],
                           screenCount: Box[NodeSeq],
                           wizardTop: Box[Elem],
@@ -89,6 +112,18 @@ trait CssBoundScreen extends ScreenWizardRendered {
                           ajax_? : Boolean): NodeSeq = {
 
     import CssBindingUtils._
+
+    NextId.set(nextId._1)
+
+    def createLocalActionField(): NodeSeq = {
+      val hiddenField = SHtml.hidden((s) => LocalAction.set(s), "")
+      val name = (hiddenField \ "@name").toString
+      LocalActionName.set(name)
+
+      hiddenField % ("id" -> name)
+    }
+
+    val localActionField = createLocalActionField()
 
     val notices: List[(NoticeType.Value, NodeSeq, Box[String])] = S.getAllNotices
 
@@ -114,7 +149,7 @@ trait CssBoundScreen extends ScreenWizardRendered {
       for ((bindingInfo, field) <- bindingInfoWithFields(Default))
       yield bindingInfo.childSelector #> bindField(field)(stripRoot(defaultFieldNodeSeq))
 
-    def bindFields: CssBindFunc = List(templateFields, selfFields, defaultFields).flatten.reduceLeft(_ & _)
+    def bindFields: CssBindFunc = List(templateFields, selfFields, defaultFields, additionalFormBindings.toList).flatten.reduceLeft(_ & _)
 
     def bindField(f:ScreenFieldInfo):CssBindFunc = {
       val theFormEarly = f.input
@@ -184,7 +219,7 @@ trait CssBoundScreen extends ScreenWizardRendered {
       val ret =
         (<form id={nextId._1} action={url}
                method="post">{S.formGroup(-1)(SHtml.hidden(() =>
-          snapshot.restore()))}{bindFields(xhtml)}{
+          snapshot.restore()))}{localActionField}{bindFields(xhtml)}{
           S.formGroup(4)(
             SHtml.hidden(() =>
             {val res = nextId._2();
@@ -241,7 +276,10 @@ trait CssBoundScreen extends ScreenWizardRendered {
       bindErrors &
       funcSetChildren(_.fields, bindForm _)
 
-    bindingFunc(allTemplate)
+    additionalFormBindings match {
+      case None => bindingFunc(allTemplate)
+      case Some(sel) => (bindingFunc & sel)(allTemplate)
+    }
   }
 
   override protected def allTemplateNodeSeq: NodeSeq = {
