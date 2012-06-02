@@ -11,7 +11,6 @@ object EmbeddedContentLiftScreen extends DemoCssBoundLiftScreen {
   def formName = "embeddedContent"
 
   def finish() {
-    Finished.set(true)
     AjaxOnDone.set(SetHtml("embeddedContentResults", <b>All done!</b>))
   }
 }

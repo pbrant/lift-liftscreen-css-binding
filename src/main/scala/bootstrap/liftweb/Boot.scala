@@ -8,7 +8,6 @@ import common._
 import http._
 import sitemap._
 import Loc._
-import code.form.FormValue
 
 
 /**
@@ -47,11 +46,6 @@ class Boot {
     // Force the request to be UTF-8
     LiftRules.early.append(_.setCharacterEncoding("UTF-8"))
 
-    import code.form.StringConverter._
-
     LiftRules.htmlProperties.default.set((r: Req) => new Html5Properties(r.userAgent))
-
-    LiftRules.prependGlobalFormBuilder(FormBuilderLocator[FormValue[String]]((value, setter) =>
-      SHtml.text(value.asString, s => setter(new FormValue[String](s)))))
   }
 }

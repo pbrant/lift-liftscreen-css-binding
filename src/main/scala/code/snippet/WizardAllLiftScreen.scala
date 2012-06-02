@@ -12,7 +12,6 @@ object WizardAllLiftScreen extends DemoCssBoundLiftScreen {
   def formName = "wizardAll"
 
   def finish() {
-    Finished.set(true)
     AjaxOnDone.set(SetHtml("wizardAllResults", <b>All done!</b>))
   }
 }

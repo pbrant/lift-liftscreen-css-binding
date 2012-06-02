@@ -1,28 +1,25 @@
 package code.snippet
 
-import net.liftweb.http.js.JsCmds
+import net.liftweb.http._
+import net.liftweb.http.js._
 import JsCmds._
+import net.liftweb.common._
 
 object LocalActionLiftScreen extends DemoCssBoundLiftScreen {
-  val name = field("Name", "")
-  bindToId(name, "name")
+  val name = field("Name", "", FieldBinding("name"))
 
-  val nameCopy = field("Name (copy)", "")
-  bindToId(nameCopy, "nameCopy")
+  val nameCopy = field("Name (copy)", "", FieldBinding("nameCopy"))
 
   def formName = "localAction"
 
-  override def additionalFormBindings = Some(bindLocalAction("#copyNameAction", "copy"))
+  override def additionalFormBindings = Full(bindLocalAction("#copyNameAction [onclick]", copy))
 
-  override protected def localActions = {
-    case "copy" => {
-      nameCopy.set(name.get)
-      renderFormCmd
-    }
+  private def copy(): JsCmd = {
+    nameCopy.set(name.get)
+    renderFormCmd
   }
 
   def finish() {
-    Finished.set(true)
     AjaxOnDone.set(SetHtml("localActionResults", <b>All done!</b>))
   }
 }

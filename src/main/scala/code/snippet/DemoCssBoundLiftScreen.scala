@@ -1,7 +1,7 @@
 package code.snippet
 
-import code.form.CssBoundLiftScreen
 import xml.NodeSeq
+import net.liftweb.http._
 
 trait DemoCssBoundLiftScreen extends CssBoundLiftScreen {
   override def defaultToAjax_? : Boolean = true
