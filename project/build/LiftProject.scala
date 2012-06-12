@@ -12,6 +12,8 @@ class LiftProject(info: ProjectInfo) extends DefaultWebProject(info) with IdeaPr
 
   lazy val JavaNet = "Java.net Maven2 Repository" at "http://download.java.net/maven/2/"
 
+  lazy val SonaSnap = "Sonatype scala-tools snapshots" at "https://oss.sonatype.org/content/repositories/snapshots"
+
   override def libraryDependencies = Set(
     "net.liftweb" %% "lift-common" % liftVersion % "compile" withSources(),
     "net.liftweb" %% "lift-util" % liftVersion % "compile" withSources(),
