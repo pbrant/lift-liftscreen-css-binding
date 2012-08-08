@@ -22,6 +22,8 @@ class Boot {
     // Build SiteMap
     val entries = List(
       Menu.i("Home") / "index", // the simple way to declare a menu
+      Menu.i("Checkout") / "checkout",
+      Menu.i("Review") / "review",
 
       // more complex because this menu allows anything in the
       // /static path to be visible
@@ -40,8 +42,7 @@ class Boot {
     LiftRules.ajaxEnd =
       Full(() => LiftRules.jsArtifacts.hide("ajax-loader").cmd)
 
-    // Use jQuery 1.4
-    LiftRules.jsArtifacts = net.liftweb.http.js.jquery.JQuery14Artifacts
+    LiftRules.jsArtifacts = net.liftweb.http.js.jquery.JQueryArtifacts
 
     // Force the request to be UTF-8
     LiftRules.early.append(_.setCharacterEncoding("UTF-8"))
