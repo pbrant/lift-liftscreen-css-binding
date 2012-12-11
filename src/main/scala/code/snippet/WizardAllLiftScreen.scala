@@ -8,8 +8,11 @@ object WizardAllLiftScreen extends DemoCssBoundLiftScreen {
   val middleName = field("Middle Name", "")
   val lastName = field("Last Name", "")
 
-  override def allTemplate = defaultAllTemplate
   def formName = "wizardAll"
+
+  // Only necessary because DemoCssBoundLiftScreen overrides
+  // allTemplate itself
+  override def allTemplate = defaultAllTemplate
 
   def finish() {
     AjaxOnDone.set(SetHtml("wizardAllResults", <b>All done!</b>))

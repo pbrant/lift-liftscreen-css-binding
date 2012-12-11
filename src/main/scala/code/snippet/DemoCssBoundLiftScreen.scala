@@ -6,6 +6,10 @@ import net.liftweb.http._
 trait DemoCssBoundLiftScreen extends CssBoundLiftScreen {
   override def defaultToAjax_? : Boolean = true
 
+  override def allTemplate = savedDefaultXml
+
+  protected def defaultAllTemplate = super.allTemplate
+
   override def defaultFieldNodeSeq: NodeSeq =
     <div>
       <label class="label field"></label>
